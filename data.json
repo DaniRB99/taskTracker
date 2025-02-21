@@ -14,5 +14,21 @@
         "status": "planned",
         "createdAt": "10/12/2024 18:54:14",
         "updatedAt": "10/12/2024 18:54:14"
+    },
+    "6": {
+        "id": 6,
+        "name": "My new task parsed with argparse",
+        "description": null,
+        "status": "planned",
+        "createdAt": "21/02/2025 20:09:28",
+        "updatedAt": "21/02/2025 20:09:28"
+    },
+    "7": {
+        "id": 7,
+        "name": "My new task parsed with argparse",
+        "description": null,
+        "status": "planned",
+        "createdAt": "21/02/2025 20:10:26",
+        "updatedAt": "21/02/2025 20:10:26"
     }
 }

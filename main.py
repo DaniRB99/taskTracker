@@ -4,7 +4,7 @@ import sys
 import os
 import json
 import logging
-import yaml
+import yaml # type: ignore
 import argparse
 from datetime import datetime
 
@@ -61,51 +61,65 @@ class task:
     def updateSequ(cls, lastId:int):
         cls._idCounter = lastId
     
-    def toDict(self) -> dict:
-        taskDict:dict = {
-            "id":self.id,
-            "name":self.name,
-            "description":self.description,
-            "status":self.status,
-            "createdAt":self.createdAt.strftime(MASK),
-            "updatedAt":self.updatedAt.strftime(MASK)
-        }
+    def toDict(self, detailledOutput:bool) -> dict:
+        taskDict:dict
+        if detailledOutput:
+            taskDict = {
+                "id":self.id,
+                "name":self.name,
+                "description":self.description,
+                "status":self.status,
+                "createdAt":self.createdAt.strftime(MASK),
+                "updatedAt":self.updatedAt.strftime(MASK)
+            }
+        else:
+            taskDict = {
+                "(id) name":f"({self.id}) {self.name}"
+            }
         return taskDict
 
 #TASK_MANAGER
 class taskManager:
     tasks:list[task]
+    logger:logging
     
     def __init__(self, tasks:list = []):
         self.tasks = tasks
         self.iniSequential()
+        self.logger = logging.getLogger("taskManager")
     
     def add(self, task_name:str, task_descrition:str = ""):
         newTask = task.new(task_name, task_descrition)
         self.tasks.append(newTask)
         self.updateJson()
-        
-        return newTask.id
+        self.logger.debug(f"ADD (Id: {newTask.id})")
+        print(f"New task added! (Id: {newTask.id})")
     
-    def update(self, task_id:int, task_name:str = "", task_desc:str = "") -> str:
+    def update(self, task_id:int, task_name:str = "", task_desc:str = "", newStatus:str="") -> str:
         changed:str = "ok"
         uptTask = self.findTask(task_id)
         if uptTask:
             uptTask.name = task_name if task_name != "" else uptTask.name
             uptTask.description = task_desc if task_desc != "" else uptTask.description
+            statusOutput = self.change_status(task_id, newStatus)
             uptTask.updatedAt = datetime.now()
             self.updateJson()
+            print(f"Task {task_id} updated! {statusOutput}")
         else:
             changed = "not found"
+            print(f"!!! Task not found!")
         return changed
     
-    def change_status(self, taskId:int, newStatus:str):
+    def change_status(self, taskId:int, newStatus:str =""):
+        if newStatus == "":
+            return ""
+        
         changed:str = "ok"
         myTask:task = self.findTask(taskId)
         if myTask:
             myTask.status = newStatus
             myTask.updatedAt = datetime.now()
-            return changed
+            changed = f"New status: {newStatus}"
         else:
             changed = "not found"
         
@@ -122,12 +136,15 @@ class taskManager:
         return popped
         
     #FIXME: mejora de output -> salida de tarea con mejor formato
-    def list(self, indent:bool = True)-> dict:
-        output={}
+    def list(self, taskId:int=None, detailled:bool = False, indent:bool = True)-> dict:
         indentOutput:int = 4 if indent else None
-        for onetask in manager.tasks:
-            output[onetask.name] = onetask.toDict()
-        return json.dumps(output, indent=indentOutput)
+        task = self.findTask(taskId)
+        tasksList = [task] if task else self.tasks
+        
+        output:dict={}
+        for onetask in tasksList:
+            output[onetask.name] = onetask.toDict(detailled)
+        print(json.dumps(output, indent=indentOutput))
     
     def findTask(self, taskId:int)->task | None:
         for i, onetask in enumerate(self.tasks):
@@ -170,10 +187,28 @@ def loadTasks() -> list:
     
 
 def arguments():
-    argparse.ArgumentParser(prog="Task Tracker Manager", 
+    parser = argparse.ArgumentParser(prog="Task Tracker Manager", 
                             description="Task to track the state of the tasks easily with commands via CLI", 
                             epilog="Contact with the email 'dani.rocamora.99@gmail.com' to solve any trouble detected")
+    subparser = parser.add_subparsers(title="Functionalities", dest="action")
     
+    add_par = subparser.add_parser("add", help="Add new task")
+    add_par.add_argument("taskName")
+    add_par.add_argument("-d", "--description")
+    
+    updt_par = subparser.add_parser("update", help="Update an existent task")
+    updt_par.add_argument("taskId", type=int)
+    updt_par.add_argument("-n", "--name", type=str)
+    updt_par.add_argument("-d", "--description", type=str)
+    updt_par.add_argument("-s", "--status", choices=["planned", "ongoing", "stuck", "finished"], type=int)
+    
+    del_par = subparser.add_parser("delete", help="Delete a task")
+    del_par.add_argument("taskId", type=int)
+    
+    list_par = subparser.add_parser("list", help="List created tasks")
+    list_par.add_argument("taskId",type=int, nargs="?")
+    list_par.add_argument("-d","--detailled", action="store_true")
+    return parser.parse_args()
     
 #options add, update, delete, list
 #TODO: USAR logging
@@ -186,41 +221,21 @@ if __name__ == "__main__":
     logger = logging.getLogger("development")
     
     logger.debug("Inicio")
-    
-    operation:str
-    argument:str
-    
-    #TODO: mejorar tratamiento de argumentos (USAR ARGPARSE)
-    if len(sys.argv) < 3 and sys.argv[1] in ("add", "update", "delete"):
-        logger.info("No operation argument indicated")
-        logger.info("Use example: \n\n\t> python main.py add myNewTask\n")
-        exit(code=1)
-    else:
-        logger.info(f"Parametros: {sys.argv}")
-        operation = sys.argv[1]
-        if len(sys.argv) < 3:
-            argument = ""
-        else:
-            argument = sys.argv[2]
-    
+    args = arguments()
+    logger.debug(f"Arguments: {args}")
+
     tasks:list = loadTasks()
     manager = taskManager(tasks)
-    logger.debug(f"Tasks readed: {manager.list(indent=False)}")
     
-    if operation == "add":        
-        taskId = manager.add(argument) #falta pasar description
-        logger.debug(f"ADD (Id: {taskId})")
-        print(f"New task added! (Id: {taskId})")
-      
-    elif operation  == "list":
-        print(manager.list())
-            
-    #TODO: identificar el campo a actualizar
-    elif operation  == "update":
-        print(manager.update(int(argument)))
-    
-    elif operation  == "delete":
-        print(manager.delete(int(argument)))
+    match args.action:
+        case "add":  
+            manager.add(args.taskName, args.description)
+        case "list":
+            manager.list(args.taskId, args.detailled)
+        case "update":
+            manager.update(args.taskId, args.taskName,  args.description, args.status)
+        case "delete":
+            manager.delete(args.taskId)
     
     logger.debug("Fin")
     logger.debug("     ")
