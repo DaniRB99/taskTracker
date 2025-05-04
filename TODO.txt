@@ -4,4 +4,4 @@
 #TODO: evolución del proyecto: conectar con un mongo ?¿
 #todo: mejorar tratamiento de argumentos (USAR ARGPARSE) --DONE 21/02
 
-#FIXME: mejora de output -> salida de tarea con mejor formato
+#fixme: mejora de output -> salida de tarea con mejor formato --DONE

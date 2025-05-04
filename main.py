@@ -1,12 +1,12 @@
 #!/python3
 import logging.config
-import sys
-import os
-import json
 import logging
 import yaml # type: ignore
+import os
+import json
 import argparse
 from datetime import datetime
+from enum import StrEnum, auto
 
 
 JSON_PATH:str = ".\\data.json"
@@ -14,15 +14,59 @@ MASK:str = "%d/%m/%Y %H:%M:%S"
 
 logger:logging.Logger
 
+#ENUM STATUS
+class Status(StrEnum):
+    TODO = auto()
+    IN_PROGRESS = auto()
+    FINISHED = auto()
+    
+    @classmethod
+    def to_list(cls)-> list:
+        outputList:list = list()
+        for i, value in enumerate(cls):            
+            outputList.append(value.name)
+        return outputList
+    
+    #does the value exists in the enum
+    @classmethod
+    def _missing_(cls, value):
+        try:
+            value = value.lower()
+        except:
+            return None
+        
+        for status in list(cls):
+            if status.value == value:
+                return status
+        return None
+    
+    #functions to manage status output in the arguments
+    @classmethod
+    def to_list_mark(cls)-> list:
+        return list(map(cls.add_mark, cls.to_list()))
+    
+    @classmethod
+    def _mark_value(cls):
+        return "mark_"
+    
+    @classmethod
+    def add_mark(cls, value):
+        return cls._mark_value()+str.lower(value)
+    
+    @classmethod
+    def remove_mark(cls,value:str):
+        unmarked_value = str(value[value.find(cls._mark_value())+len(cls._mark_value()):].upper())
+        return cls._missing_(unmarked_value)
+
 #CLASE TASK
-class task:
+class Task:
     #id sequential
     _idCounter:int = 0
     
     id:int
     name:str
     description:str
-    status:str #"planned" | "ongoing" | "finished"
+    status:Status 
     createdAt:datetime
     updatedAt:datetime
     
@@ -40,7 +84,7 @@ class task:
             "id":cls.nextId(),
             "name":name,
             "description":desc,
-            "status":"planned",
+            "status":Status.TODO,
             "createdAt":datetime.now(),
             "updatedAt":datetime.now()
         }
@@ -61,10 +105,9 @@ class task:
     def updateSequ(cls, lastId:int):
         cls._idCounter = lastId
     
-    def toDict(self, detailledOutput:bool) -> dict:
+    def toDict(self) -> dict:
         taskDict:dict
-        if detailledOutput:
-            taskDict = {
+        taskDict = {
                 "id":self.id,
                 "name":self.name,
                 "description":self.description,
@@ -72,15 +115,19 @@ class task:
                 "createdAt":self.createdAt.strftime(MASK),
                 "updatedAt":self.updatedAt.strftime(MASK)
             }
-        else:
-            taskDict = {
-                "(id) name":f"({self.id}) {self.name}"
-            }
+        
         return taskDict
-
+    
+    def toStr(self, detailled:bool = False):
+        string = f"({self.id}) {self.name} - |{self.status.upper()}|"
+        if detailled:
+            string = string + f": [{self.description}] created: {self.createdAt} last update: {self.updatedAt}"
+            
+        return string 
+        
 #TASK_MANAGER
-class taskManager:
-    tasks:list[task]
+class TaskManager:
+    tasks:list[Task]
     logger:logging
     
     def __init__(self, tasks:list = []):
@@ -88,76 +135,93 @@ class taskManager:
         self.iniSequential()
         self.logger = logging.getLogger("taskManager")
     
-    def add(self, task_name:str, task_descrition:str = ""):
-        newTask = task.new(task_name, task_descrition)
+    def add(self, taskName:str, taskDesc:str = ""):
+        self.logger.debug(f"Adding new task {taskName}")
+        newTask = Task.new(taskName, taskDesc)
         self.tasks.append(newTask)
         self.updateJson()
         self.logger.debug(f"ADD (Id: {newTask.id})")
         print(f"New task added! (Id: {newTask.id})")
     
-    def update(self, task_id:int, task_name:str = "", task_desc:str = "", newStatus:str="") -> str:
+    def update(self, taskId:int, taskName:str = "", taskDesc:str = "", newStatus:Status="") -> str:
+        self.logger.debug(f"Updating task {taskId}")
         changed:str = "ok"
-        uptTask = self.findTask(task_id)
+        uptTask = self.findTask(taskId)
         if uptTask:
-            uptTask.name = task_name if task_name != "" else uptTask.name
-            uptTask.description = task_desc if task_desc != "" else uptTask.description
-            statusOutput = self.change_status(task_id, newStatus)
+            uptTask.name = taskName if taskName else uptTask.name
+            uptTask.description = taskDesc if taskDesc else uptTask.description
+            statusOutput = self._change_status(taskId, newStatus)
             uptTask.updatedAt = datetime.now()
             self.updateJson()
-            print(f"Task {task_id} updated! {statusOutput}")
+            print(f"Task {taskId} updated!")
         else:
             changed = "not found"
             print(f"!!! Task not found!")
         return changed
     
-    def change_status(self, taskId:int, newStatus:str =""):
-        if newStatus == "":
-            return ""
-        
+    def _change_status(self, taskId:int, newStatus:Status):
+        self.logger.debug(f"Changing status of task {taskId}")
         changed:str = "ok"
-        myTask:task = self.findTask(taskId)
-        if myTask:
+        myTask:Task = self.findTask(taskId)
+        if myTask and Status._missing_(newStatus):
             myTask.status = newStatus
             myTask.updatedAt = datetime.now()
-            changed = f"New status: {newStatus}"
+            changed = f"New status: {newStatus.name}"
         else:
             changed = "not found"
-        
+
+        return changed
+    
+    def change_status(self, taskId:int, newStatus:Status):
+        uptTask = self.findTask(taskId)
+        if uptTask:
+            changed = self._change_status(taskId, newStatus)
+            uptTask.updatedAt = datetime.now()
+            self.updateJson()
+            print(f"Task {taskId} marked as {newStatus}!")
+        else:
+            changed = "not found"
+            print(f"!!! Task not found!")
         return changed
         
     def delete(self, taskId:int):
-        popped:str = "Task no encontrada"
+        self.logger.debug(f"Deleting task {taskId}")
+        popped:str = "Task not found"
         for i, task in enumerate(self.tasks):
             if task.id == taskId:
                 tasks.pop(i)
                 self.updateJson()
-                popped = f"Task con id: {task.id} ha sido eliminada"
+                popped = f"Task with id: {task.id} has been deleted"
                 break
         return popped
         
-    #FIXME: mejora de output -> salida de tarea con mejor formato
-    def list(self, taskId:int=None, detailled:bool = False, indent:bool = True)-> dict:
-        indentOutput:int = 4 if indent else None
+    def list(self, taskId:int=None, detailled:bool = False, status:Status = None)-> dict:
+        self.logger.debug(f"Listing {taskId}")
         task = self.findTask(taskId)
         tasksList = [task] if task else self.tasks
         
-        output:dict={}
-        for onetask in tasksList:
-            output[onetask.name] = onetask.toDict(detailled)
-        print(json.dumps(output, indent=indentOutput))
+        print("(id) task_name - |status|\n")
+        for onetask in filter((lambda task, st=status: self.isStatus(task,st)), tasksList):
+            print(onetask.toStr(detailled))
     
-    def findTask(self, taskId:int)->task | None:
+        
+    def findTask(self, taskId:int)->Task | None:
         for i, onetask in enumerate(self.tasks):
             if onetask.id == taskId:
                 return onetask
         return None
+    
+    #Status == None -> True
+    #Status -> filter by argument status
+    def isStatus(self, task:Task, status:Status):
+        return task.status == status or status is None
     
     def iniSequential(self):
         maxId:int = 0
         for taskSaved in self.tasks:
             if taskSaved.id > maxId:
                 maxId = taskSaved.id
-        task.updateSequ(maxId)
+        Task.updateSequ(maxId)
     
     def updateJson(self):
         newData = {}
@@ -169,6 +233,7 @@ class taskManager:
     
 #FILE_HANDLER
 def loadJson()->dict:
+    #create json if it does not exist
     if not os.path.exists(JSON_PATH) or not os.path.isfile(JSON_PATH):
          with open(JSON_PATH, "w") as jsonIO:
              jsonIO.write(json.dumps({}, indent=4))
@@ -181,7 +246,7 @@ def loadTasks() -> list:
     taskDict = loadJson()
     tasks:list = []
     for key in taskDict.keys():
-        tasks.append(task.load(taskDict[key]))
+        tasks.append(Task.load(taskDict[key]))
     
     return tasks
     
@@ -190,7 +255,7 @@ def arguments():
     parser = argparse.ArgumentParser(prog="Task Tracker Manager", 
                             description="Task to track the state of the tasks easily with commands via CLI", 
                             epilog="Contact with the email 'dani.rocamora.99@gmail.com' to solve any trouble detected")
-    subparser = parser.add_subparsers(title="Functionalities", dest="action")
+    subparser = parser.add_subparsers(title="Functionalities", dest="action", required=True )
     
     add_par = subparser.add_parser("add", help="Add new task")
     add_par.add_argument("taskName")
@@ -200,19 +265,22 @@ def arguments():
     updt_par.add_argument("taskId", type=int)
     updt_par.add_argument("-n", "--name", type=str)
     updt_par.add_argument("-d", "--description", type=str)
-    updt_par.add_argument("-s", "--status", choices=["planned", "ongoing", "stuck", "finished"], type=int)
+    updt_par.add_argument("-s", "--status", choices=[Status.to_list()])
     
     del_par = subparser.add_parser("delete", help="Delete a task")
     del_par.add_argument("taskId", type=int)
     
     list_par = subparser.add_parser("list", help="List created tasks")
-    list_par.add_argument("taskId",type=int, nargs="?")
+    list_par.add_argument("--id",type=int)
     list_par.add_argument("-d","--detailled", action="store_true")
+    list_par.add_argument("status",nargs='?',  choices=[Status.to_list()])
+    
+    for status in Status.to_list_mark():
+        newStatusParser = subparser.add_parser(status, help="Change task status to " + Status.remove_mark(status))
+        newStatusParser.add_argument("taskId", type=int)
     return parser.parse_args()
     
 #options add, update, delete, list
-#TODO: USAR logging
-#TODO: pasar por parámetro nombre con espacios, ej: "mi tarea"
 #TODO: evolución del proyecto: conectar con un mongo ?¿
 if __name__ == "__main__":
     with open("config.yaml", "rt") as f:
@@ -221,21 +289,26 @@ if __name__ == "__main__":
     logger = logging.getLogger("development")
     
     logger.debug("Inicio")
+    output:str
     args = arguments()
     logger.debug(f"Arguments: {args}")
 
     tasks:list = loadTasks()
-    manager = taskManager(tasks)
+    manager = TaskManager(tasks)
     
     match args.action:
         case "add":  
-            manager.add(args.taskName, args.description)
+            output = manager.add(args.taskName, args.description)
         case "list":
-            manager.list(args.taskId, args.detailled)
+            output = manager.list(args.id, args.detailled,args.status)
         case "update":
-            manager.update(args.taskId, args.taskName,  args.description, args.status)
+            output = manager.update(args.taskId, args.name,  args.description, args.status)
         case "delete":
-            manager.delete(args.taskId)
-    
+            output = manager.delete(args.taskId)
+        case _:
+            if Status.remove_mark(args.action):
+                output = manager.change_status(args.taskId, Status.remove_mark(args.action))
+
+    logger.debug(f"output: {output}")
     logger.debug("Fin")
     logger.debug("     ")

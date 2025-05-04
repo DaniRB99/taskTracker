@@ -1,34 +1,42 @@
 {
     "2": {
         "id": 2,
-        "name": "una_tarea_cualquiera",
-        "description": "",
-        "status": "planned",
+        "name": "Limpieza de casa",
+        "description": "Fregar y barrer el suelo del piso",
+        "status": "TODO",
         "createdAt": "09/12/2024 18:51:16",
-        "updatedAt": "09/12/2024 18:51:16"
+        "updatedAt": "04/05/2025 21:21:36"
     },
     "5": {
         "id": 5,
         "name": "estoy_harto",
         "description": "",
-        "status": "planned",
+        "status": "in_progress",
         "createdAt": "10/12/2024 18:54:14",
-        "updatedAt": "10/12/2024 18:54:14"
+        "updatedAt": "04/05/2025 20:11:22"
     },
     "6": {
         "id": 6,
         "name": "My new task parsed with argparse",
         "description": null,
-        "status": "planned",
+        "status": "TODO",
         "createdAt": "21/02/2025 20:09:28",
         "updatedAt": "21/02/2025 20:09:28"
     },
     "7": {
         "id": 7,
-        "name": "My new task parsed with argparse",
+        "name": "Organizar LeetCodes",
         "description": null,
-        "status": "planned",
-        "createdAt": "21/02/2025 20:10:26",
-        "updatedAt": "21/02/2025 20:10:26"
+        "status": "in_progress",
+        "createdAt": "04/05/2025 21:23:01",
+        "updatedAt": "04/05/2025 21:27:03"
+    },
+    "8": {
+        "id": 8,
+        "name": "B\u00fasqueda de ofertas",
+        "description": "Encontrar una oferta interesante y hace una solicitud sencilla en LNK",
+        "status": "todo",
+        "createdAt": "04/05/2025 21:26:04",
+        "updatedAt": "04/05/2025 21:26:04"
     }
 }
