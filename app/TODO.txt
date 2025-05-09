@@ -1,0 +1,9 @@
+#options add, update, delete, list
+#todo: USAR logging --DONE 21/02
+#todo: pasar por parámetro nombre con espacios, ej: "mi tarea" --DONE 21/02
+#todo: mejorar tratamiento de argumentos (USAR ARGPARSE) --DONE 21/02
+#fixme: mejora de output -> salida de tarea con mejor formato --DONE
+
+#TODO: evolución del proyecto: conectar con un mongo ?¿
+#TODO: instalar llamada para poder utilizar desde cualquier sitio
+#TODO:  .BAT PARA EJECUTAR EL PROGRAMA

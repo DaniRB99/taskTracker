@@ -1,4 +1,9 @@
 # TaskTracker
+
+
+<img src="images/tasktrack_img.png" alt="drawing" width="250" style="float: right;"/>
+
+
 Herramienta para planificar tareas y registrar su progreso. El progreso de las diferentes tareas se puede guardar como planificado, en progreso o finalizado. El programa permite generar, actualizar y borrar las tareas creadas, además de ir cambiando el estado según se avance con la tarea.
 
 Esta aplicación es CLI por lo que está pensado para su uso a través de terminal. Se pueden seguir los pasos de instalación y configuración para su uso.
@@ -10,18 +15,40 @@ Con cada llamada que realizado al programa con la acción requerida esta se efec
 
 Para conocer los argumentos que se pueden utilizar el comando *--help*. Esto indicará las posibles acciones, y usando *--help* con la acción se indicará que argumentos opcionales y obligatorios existen.
 
+### Ejemplos de uso
 
-## INSTALLATION STEPS
+> Añadiendo una nueva tarea 
 
-Clone the repository on local
+`python main.py add "Organizar carpetas" -d "Organizar las carpetas del proyecto para que sea visualmente más bonito"`
 
-Move to the folder of the project and open a terminal
+    New task added! (Id: 9)
 
-Create virtual enviroment
-> python -m venv ./venv
+---
+> Cambiar el estado de la tarea
 
-Install requirements
-> pip -m install requirements.txt
+`python main.py mark_in_progress 9`
+    
+    Task 9 marked as in_progress!
 
-Execute
-> python main.py --help
+---
+> Listar las tareas guardadas
+
+`python main.py list`
+
+    (id) task_name - |status|
+
+    (9) Organizar carpetas - |IN_PROGRESS|
+
+## Pasos de instalación
+
+> Clonar repositorio en local
+------
+> Abrir una terminal dentro de la carpeta *app* del proyecto
+------
+> Ejecutar script de configuración
+
+``./install.bat``
+
+---
+
+> Ya está listo para su uso

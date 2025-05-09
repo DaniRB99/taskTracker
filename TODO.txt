@@ -1,7 +1,0 @@
-#options add, update, delete, list
-#todo: USAR logging --DONE 21/02
-#todo: pasar por parámetro nombre con espacios, ej: "mi tarea" --DONE 21/02
-#TODO: evolución del proyecto: conectar con un mongo ?¿
-#todo: mejorar tratamiento de argumentos (USAR ARGPARSE) --DONE 21/02
-
-#fixme: mejora de output -> salida de tarea con mejor formato --DONE

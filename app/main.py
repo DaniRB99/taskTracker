@@ -5,6 +5,7 @@ import yaml # type: ignore
 import os
 import json
 import argparse
+from pathlib import Path
 from datetime import datetime
 from enum import StrEnum, auto
 
@@ -187,12 +188,16 @@ class TaskManager:
     def delete(self, taskId:int):
         self.logger.debug(f"Deleting task {taskId}")
         popped:str = "Task not found"
-        for i, task in enumerate(self.tasks):
-            if task.id == taskId:
-                tasks.pop(i)
-                self.updateJson()
-                popped = f"Task with id: {task.id} has been deleted"
-                break
+        task = self.findTask(taskId)
+        try:
+            self.tasks.remove(task)
+            self.updateJson()
+            popped = f"Task deleted successfully (ID:{task.id})"
+            print(popped)
+        except ValueError:
+            popped = f"Task not found! (ID:{taskId})"
+            print(popped)
+
         return popped
         
     def list(self, taskId:int=None, detailled:bool = False, status:Status = None)-> dict:
@@ -282,7 +287,9 @@ def arguments():
     
 #options add, update, delete, list
 #TODO: evolución del proyecto: conectar con un mongo ?¿
+#TODO:  .BAT PARA EJECUTAR EL PROGRAMA
 if __name__ == "__main__":
+    print(f"PATH ACTUAL {Path.cwd()}")
     with open("config.yaml", "rt") as f:
         config=yaml.safe_load(f.read())
         logging.config.dictConfig(config)
