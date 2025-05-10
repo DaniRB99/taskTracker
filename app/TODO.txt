@@ -6,4 +6,4 @@
 
 #TODO: evolución del proyecto: conectar con un mongo ?¿
 #TODO: instalar llamada para poder utilizar desde cualquier sitio
-#TODO:  .BAT PARA EJECUTAR EL PROGRAMA
+#todo:  .BAT PARA EJECUTAR EL PROGRAMA -- DONE 10/05/2025

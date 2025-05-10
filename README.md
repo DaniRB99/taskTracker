@@ -6,9 +6,9 @@
 
 Herramienta para planificar tareas y registrar su progreso. El progreso de las diferentes tareas se puede guardar como planificado, en progreso o finalizado. El programa permite generar, actualizar y borrar las tareas creadas, además de ir cambiando el estado según se avance con la tarea.
 
-Esta aplicación es CLI por lo que está pensado para su uso a través de terminal. Se pueden seguir los pasos de instalación y configuración para su uso.
+Esta aplicación es CLI, por lo que está pensado para su uso a través de terminal. Se pueden seguir los pasos de instalación y configuración.
 
-El proyecto tiene como finalidad el estudio de Python y alguna librería como, Argparse, que se utiliza para gestionar los argumentos pasados al programa. Lo más interesante es permitir configurar los argumentos requeridos según a la funcionalidad que se necesite utilizar, al estilo del funcionamiento de argumentos de Git.
+El proyecto tiene como finalidad el estudio de Python y alguna librería como, Argparse, que se utiliza para gestionar los argumentos pasados al programa. Lo funcionalidad más interesante que aporta es permitir configurar los argumentos requeridos según la funcionalidad a la que se llame, al estilo de la gestión de argumentos de Git.  Además, proporciona seguridad sobre los argumentos que se recibe en el script y evitar inyecciones maliciosas.
 
 ## USO
 Con cada llamada que realizado al programa con la acción requerida esta se efectua y se guardan los cambios en el JSON que tiene adjunto (data.json). En este fichero se guardará todos los datos de las tareas.
@@ -19,21 +19,21 @@ Para conocer los argumentos que se pueden utilizar el comando *--help*. Esto ind
 
 > Añadiendo una nueva tarea 
 
-`python main.py add "Organizar carpetas" -d "Organizar las carpetas del proyecto para que sea visualmente más bonito"`
+`task-tracker add "Organizar carpetas" -d "Organizar las carpetas del proyecto para que sea visualmente más bonito"`
 
     New task added! (Id: 9)
 
 ---
 > Cambiar el estado de la tarea
 
-`python main.py mark_in_progress 9`
+`task-tracker mark_in_progress 9`
     
     Task 9 marked as in_progress!
 
 ---
 > Listar las tareas guardadas
 
-`python main.py list`
+`task-tracker list`
 
     (id) task_name - |status|
 
@@ -51,4 +51,5 @@ Para conocer los argumentos que se pueden utilizar el comando *--help*. Esto ind
 
 ---
 
-> Ya está listo para su uso
+> Ya está listo para su uso.
+> Se puede ejecutar desde cualquier terminal con el nombre *task-tracker*

@@ -5,7 +5,6 @@ import yaml # type: ignore
 import os
 import json
 import argparse
-from pathlib import Path
 from datetime import datetime
 from enum import StrEnum, auto
 
@@ -284,22 +283,35 @@ def arguments():
         newStatusParser = subparser.add_parser(status, help="Change task status to " + Status.remove_mark(status))
         newStatusParser.add_argument("taskId", type=int)
     return parser.parse_args()
-    
+
+#Change the directory path to be able to read the config files
+#Because task-tracker can be execute from anywhere
+def changePathExec():
+    chDirOutput = f"Executing script from {os.getcwd()}"
+    dirScript = os.path.dirname(os.path.abspath(__file__))
+    if os.getcwd() != dirScript:
+        os.chdir(dirScript)
+        chDirOutput = chDirOutput + f" -- Changed path to {os.getcwd()}"
+    else:
+        chDirOutput = "Path OK"
+    return chDirOutput
+ 
 #options add, update, delete, list
 #TODO: evolución del proyecto: conectar con un mongo ?¿
-#TODO:  .BAT PARA EJECUTAR EL PROGRAMA
+#todo:  .BAT PARA EJECUTAR EL PROGRAMA
 if __name__ == "__main__":
-    print(f"PATH ACTUAL {Path.cwd()}")
+    chPath = changePathExec()
+    
     with open("config.yaml", "rt") as f:
         config=yaml.safe_load(f.read())
-        logging.config.dictConfig(config)
+        logging.config.dictConfig(config) 
     logger = logging.getLogger("development")
-    
+    logger.debug("-"*30)
     logger.debug("Inicio")
+    logger.debug(chPath)
     output:str
     args = arguments()
     logger.debug(f"Arguments: {args}")
-
     tasks:list = loadTasks()
     manager = TaskManager(tasks)
     
