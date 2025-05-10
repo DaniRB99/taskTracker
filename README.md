@@ -53,3 +53,7 @@ Para conocer los argumentos que se pueden utilizar el comando *--help*. Esto ind
 
 > Ya está listo para su uso.
 > Se puede ejecutar desde cualquier terminal con el nombre *task-tracker*
+
+### Project based on [roadmap.sh](https://roadmap.sh/projects/task-tracker)
+
+### License [MIT](https://mit-license.org/)
