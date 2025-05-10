@@ -260,7 +260,7 @@ def loadTasks() -> list:
 def arguments():
     parser = argparse.ArgumentParser(prog="Task Tracker Manager", 
                             description="Task to track the state of the tasks easily with commands via CLI", 
-                            epilog="Contact with the email 'dani.rocamora.99@gmail.com' to solve any trouble detected")
+                            epilog="Contact with the email 'dani.rocamora.99@gmail.com' to report any trouble detected")
     subparser = parser.add_subparsers(title="Functionalities", dest="action", required=True )
     
     add_par = subparser.add_parser("add", help="Add new task")

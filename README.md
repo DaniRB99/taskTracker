@@ -1,10 +1,39 @@
 # TaskTracker
 
 
-<img src="images/tasktrack_img.png" alt="drawing" width="250" style="float: right;"/>
+<div align="center">
+    <img alt="GitHub Repo Name" src="https://img.shields.io/badge/Task_Tracker-yellow">
+    <img alt="GitHub Author" src="https://img.shields.io/badge/Author-Daniel_Rocamora_Bru-b3bd1d?style=flat&color=b3bd1d">
+    <img alt="GitHub commit-activity" src="https://img.shields.io/github/commit-activity/t/DaniRB99/taskTracker?color=red">
+    <img alt="GitHub Created At" src="https://img.shields.io/github/created-at/DaniRB99/taskTracker?color=569414">
+    <!--<img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub Repo Size" src="https://img.shields.io/github/repo-size/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub License" src="https://img.shields.io/github/license/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub Open Issues" src="https://img.shields.io/github/issues/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub Closed Issues" src="https://img.shields.io/github/issues-closed/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub Open PR" src="https://img.shields.io/github/issues-pr/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub Closed PR" src="https://img.shields.io/github/issues-pr-closed/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub Forks" src="https://img.shields.io/github/forks/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub Stars" src="https://img.shields.io/github/stars/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub Watchers" src="https://img.shields.io/github/watchers/yashksaini-coder/Task-Tracker">
+    <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/yashksaini-coder/Task-Tracker">-->
+</div>
+<br>
 
+<div align='center' style=" display: grid;">
+
+  [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:dani.rocamora.99@gmail.com)
+  [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/DaniRB99)
+  [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/drocamorabru/)
+<!--[![Instagram](https://img.shields.io/badge/Instagram-%23FF006E.svg?style=for-the-badge&logo=Instagram&logoColor=white)](https://www.instagram.com/yashksaini.codes/)-->
+  <!--[![X](https://img.shields.io/badge/X-%23000000.svg?style=for-the-badge&logo=X&logoColor=white)](https://twitter.com/EasycodesDev) -->
+</div>
 
 Herramienta para planificar tareas y registrar su progreso. El progreso de las diferentes tareas se puede guardar como planificado, en progreso o finalizado. El programa permite generar, actualizar y borrar las tareas creadas, además de ir cambiando el estado según se avance con la tarea.
+
+<div align="center">
+    <img src="images/tasktrack_img.png" alt="Task Tracker CLI" width="300"/>
+</div>
 
 Esta aplicación es CLI, por lo que está pensado para su uso a través de terminal. Se pueden seguir los pasos de instalación y configuración.
 
