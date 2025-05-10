@@ -198,13 +198,15 @@ class TaskManager:
             print(popped)
 
         return popped
-        
+    
+    #TODO: Mejora de output: que se muestren las columnas organizadas para cada campo
     def list(self, taskId:int=None, detailled:bool = False, status:Status = None)-> dict:
         self.logger.debug(f"Listing {taskId}")
         task = self.findTask(taskId)
         tasksList = [task] if task else self.tasks
         
-        print("(id) task_name - |status|\n")
+        print("(id) task_name - |status|")
+        print("-------------------------")
         for onetask in filter((lambda task, st=status: self.isStatus(task,st)), tasksList):
             print(onetask.toStr(detailled))
     
@@ -279,9 +281,10 @@ def arguments():
     list_par.add_argument("-d","--detailled", action="store_true")
     list_par.add_argument("status",nargs='?',  choices=[Status.to_list()])
     
+    newStatusParser = []
     for status in Status.to_list_mark():
-        newStatusParser = subparser.add_parser(status, help="Change task status to " + Status.remove_mark(status))
-        newStatusParser.add_argument("taskId", type=int)
+        newStatusParser.append(subparser.add_parser(status, help="Change task status to " + Status.remove_mark(status)))
+        newStatusParser[-1].add_argument("taskId", type=int)
     return parser.parse_args()
 
 #Change the directory path to be able to read the config files
