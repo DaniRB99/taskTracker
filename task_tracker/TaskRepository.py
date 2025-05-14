@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime
 from task_tracker.Task import Task, Status
+from pathlib import Path
 
 class TaskRepository:
     tasks:list[Task]
@@ -15,7 +16,9 @@ class TaskRepository:
         self.logger = logging.getLogger("TaskRepository")
     
     @classmethod
-    def loadJson(cls, jsonPath)->dict:
+    def loadJson(cls, jsonPath:str)->dict:
+        if not os.path.exists(jsonPath):
+            os.makedirs(jsonPath[:jsonPath.find("\\")])
         if not os.path.exists(jsonPath) or not os.path.isfile(jsonPath):
             with open(jsonPath, "w") as jsonIO:
                 jsonIO.write(json.dumps({}, indent=4))
@@ -113,3 +116,5 @@ class TaskRepository:
         with open(self.jsonPath, "w") as jsonIO:
             jsonIO.write(json.dumps(newData, indent=4))
     
+if __name__ == "__main__":
+    manager = TaskRepository.loadTasks("data\\tasks.json")

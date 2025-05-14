@@ -7,23 +7,6 @@ import argparse
 
 from task_tracker.TaskRepository import TaskRepository, Status
 
-
-#FIXME: FORMA INCORRECTA DE CARGAR FICHEROS EXTERNOS
-# import importlib.resources
-
-# with importlib.resources.files("task_tracker.data").joinpath("tareas.json").open("r", encoding="utf-8") as f:
-#     contenido = f.read()
-
-# try:
-#     import importlib.resources as pkg_resources  # Python 3.9+
-# except ImportError:
-#     import importlib_resources as pkg_resources  # pip install importlib_resources
-
-# from task_tracker import data
-
-# with pkg_resources.open_text(data, "tareas.json") as f:
-#     contenido = f.read()
-
 def arguments():
     parser = argparse.ArgumentParser(prog="Task Tracker Manager", 
                             description="Task to track the state of the tasks easily with commands via CLI", 
