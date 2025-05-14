@@ -1,3 +1,7 @@
 venv/
 *.log*
 *.json
+*.egg-info
+__pycache__
+build
+dist

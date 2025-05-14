@@ -8,6 +8,6 @@
 #TODO: instalar llamada para poder utilizar desde cualquier sitio
 #todo:  .BAT PARA EJECUTAR EL PROGRAMA -- DONE 10/05/2025
 #TODO: Mejora de output: que se muestren las columnas organizadas para cada campo
-#TODO: Refactorizar --> funcion main() y sacar a fichero task y taskManager
 #TODO: OUTPUT BONITO CLI rich.console - rich.table - rich.prompt
 #TODO: buscar generador titulo en ASCII
+#todo: refactorizar: Separar clases en ficheros y revisar código repetido --DONE 14/05/2025

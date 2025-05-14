@@ -48,21 +48,21 @@ Para conocer los argumentos que se pueden utilizar el comando *--help*. Esto ind
 
 > Añadiendo una nueva tarea 
 
-`task-tracker add "Organizar carpetas" -d "Organizar las carpetas del proyecto para que sea visualmente más bonito"`
+`task_tracker add "Organizar carpetas" -d "Organizar las carpetas del proyecto para que sea visualmente más bonito"`
 
     New task added! (Id: 9)
 
 ---
 > Cambiar el estado de la tarea
 
-`task-tracker mark_in_progress 9`
+`task_tracker mark_in_progress 9`
     
     Task 9 marked as in_progress!
 
 ---
 > Listar las tareas guardadas
 
-`task-tracker list`
+`task_tracker list`
 
     (id) task_name - |status|
 
@@ -72,16 +72,25 @@ Para conocer los argumentos que se pueden utilizar el comando *--help*. Esto ind
 
 > Clonar repositorio en local
 ------
-> Abrir una terminal dentro de la carpeta *app* del proyecto
+> Abrir una terminal dentro de la carpeta del proyecto
 ------
-> Ejecutar script de configuración
+> Ejecutar script constructor del paquete
 
-``./install.bat``
+``.\make_package.bat``
+
+> Ejecutar script de instalación
+
+``.\install_package.bat``
+
+---
+> Probar funcionamiento
+
+``task_tracker --help``
 
 ---
 
 > Ya está listo para su uso.
-> Se puede ejecutar desde cualquier terminal con el nombre *task-tracker*
+> Se puede ejecutar desde cualquier terminal con el nombre *task_tracker*
 
 ### Project based on [roadmap.sh](https://roadmap.sh/projects/task-tracker)
 
